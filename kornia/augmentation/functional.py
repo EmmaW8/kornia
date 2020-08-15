@@ -904,7 +904,7 @@ def apply_mixup(input: torch.Tensor, labels: torch.Tensor,
     # labels = torch.stack([labels.float(), labels_permute.float(), params['mixup_lambdas'].to(labels.device)], dim=-1)
     # return inputs, labels
 
-    print('inputs:', inputs.device, type(inputs))
+    print('inputs:', input.device, type(input))
     print('labels:', labels.device, type(labels))
 
     input = _transform_input(input)
