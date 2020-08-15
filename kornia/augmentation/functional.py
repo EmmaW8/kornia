@@ -909,10 +909,10 @@ def apply_mixup(input: torch.Tensor, labels: torch.Tensor,
 
     input = _transform_input(input)
     _validate_input_dtype(input, accepted_dtypes=[torch.float16, torch.float32, torch.float64])
-    input_permute = input.index_select(dim=0, index=params['mixup_pairs'])
-    labels_permute = labels.index_select(dim=0, index=params['mixup_pairs'])
+    input_permute = input.index_select(dim=0, index=params['mixup_pairs'].to(input.device)).to(input.device)
+    labels_permute = labels.index_select(dim=0, index=params['mixup_pairs'].to(input.device)).to(input.device)
 
-    lam = params['mixup_lambdas'].view(-1, 1, 1, 1).expand_as(input)
+    lam = params['mixup_lambdas'].view(-1, 1, 1, 1).expand_as(input).to(input.device)
     inputs = input * (1 - lam) + input_permute * lam
-    labels = torch.stack([labels.float(), labels_permute.float(), params['mixup_lambdas']], dim=-1)
+    labels = torch.stack([labels.float(), labels_permute.float(), params['mixup_lambdas'].to(input.device)], dim=-1).to(input.device)
     return inputs, labels
