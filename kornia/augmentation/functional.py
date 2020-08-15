@@ -899,7 +899,7 @@ def apply_mixup(input: torch.Tensor, labels: torch.Tensor,
     input_permute = input.index_select(dim=0, index=params['mixup_pairs'].cuda())
     labels_permute = labels.index_select(dim=0, index=params['mixup_pairs'].cuda())
 
-    lam = params['mixup_lambdas'].view(-1, 1, 1, 1).expand_as(input)
+    lam = params['mixup_lambdas'].view(-1, 1, 1, 1).expand_as(input).cuda()
     inputs = input * (1 - lam) + input_permute * lam
     labels = torch.stack([labels.float(), labels_permute.float(), params['mixup_lambdas']], dim=-1)
     return inputs, labels
